@@ -1,4 +1,4 @@
-import Funcionario from "../../models/funcionario"
+import {Funcionario} from '../models/modelos'
 import { Request, Response } from 'express'
 import mongoose from "mongoose"
 
@@ -9,6 +9,10 @@ export default class FuncionarioController {
 
     if (!nome || !cpf) {
       return res.status(400).json({ error: 'Todos os campos são obrigatórios!!' })
+    }
+
+    if (cpf.length<11 || cpf.length>11) {
+      return res.status(400).json({ error: 'Digite um CPF válido' })
     }
 
     const existeFuncionario = await Funcionario.findOne({ cpf: cpf }).exec();
@@ -29,25 +33,14 @@ export default class FuncionarioController {
     return res.json(funcionario)
   }
 
-  static async showById(req: Request, res: Response) {
-    const { _id } = req.params
-
-    if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
-      return res.status(400).json({ error: 'O id é obrigatório' })
-    }
-
-    const funcionario = await Funcionario.findById(_id).exec()
-    return res.json(funcionario)
-  }
-
   static async showByCpf(req: Request, res: Response) {
     const { cpf } = req.params
 
-    if (!cpf) {
-      return res.status(400).json({ error: 'O CPF é obrigatório' })
+    if (!cpf || cpf.length<11 || cpf.length>11) {
+      return res.status(400).json({ error: 'Digite um CPF válido' })
     }
 
-    const funcionario = await Funcionario.findOne({ cpf: cpf }).exec()
+    const funcionario = await Funcionario.findOne({ cpf: cpf }).populate('notebook').exec()
     return res.json(funcionario)
   }
 
@@ -59,10 +52,12 @@ export default class FuncionarioController {
       return res.status(400).json({ error: 'O id é obrigatório' })
     }
 
+
     const funcionario = await Funcionario.findById(_id).exec()
     if (!funcionario) {
       return res.status(404).json({ error: 'Funcionário não encontrado' })
     }
+
 
     await funcionario.deleteOne({ _id: _id });
     return res.status(204).json()
@@ -80,20 +75,21 @@ export default class FuncionarioController {
       return res.status(404).json({ error: 'Funcionário não encontrado' })
     }
 
+
     await funcionario.deleteOne({ cpf: cpf });
     return res.status(204).json()
   }
 
-  static async update (req: Request, res: Response) {
+  static async update(req: Request, res: Response) {
     const { cpf } = req.params
-    const {nome} = req.body
+    const { nome } = req.body
 
 
     if (!cpf) {
       return res.status(400).json({ error: 'O CPF é obrigatório' })
     }
 
-    if(!nome){
+    if (!nome) {
       return res.status(400).json({ error: 'O nome é obrigatório' })
     }
 
