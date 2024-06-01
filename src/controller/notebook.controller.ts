@@ -32,6 +32,7 @@ export default class NotebookController {
         await notebook.save()
 
         funcionario.notebook = notebook._id
+        funcionario.possuiNotebook = true
         await funcionario.save()
 
         return res.status(201).json(notebook)
@@ -46,7 +47,7 @@ export default class NotebookController {
           return res.status(404).json({ error: 'Funcionário não encontrado' })
         }
     
-        if (!funcionario.notebook) {
+        if (!funcionario.notebook || funcionario.possuiNotebook === false) {
             return res.status(400).json({ error: 'O funcionário não possui um notebook associado' });
         }
 
@@ -92,6 +93,7 @@ export default class NotebookController {
     
 
         funcionario.notebook = undefined
+        funcionario.possuiNotebook = false
         await funcionario.save()
 
         await notebook.deleteOne({_id: notebook._id})

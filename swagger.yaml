@@ -1,0 +1,1091 @@
+openapi: 3.0.0
+info:
+  title: Funcionario API
+  version: 1.0.0
+  description: API para gerenciamento de funcionários
+servers:
+  - url: http://localhost:3000
+paths:
+  /funcionario:
+    post:
+      summary: Cria um novo funcionário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: "João da Silva"
+                cpf:
+                  type: string
+                  example: "12345678901"
+      responses:
+        '201':
+          description: Funcionario criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: Lista todos os funcionários
+      responses:
+        '200':
+          description: Lista de funcionários
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Funcionario'
+  /funcionario/{cpf}:
+    get:
+      summary: Retorna um funcionário pelo CPF
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '200':
+          description: Funcionario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionario não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Atualiza um funcionário pelo CPF
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: "Maria da Silva"
+      responses:
+        '200':
+          description: Funcionario atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionario não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /funcionario/deleteById/{_id}:
+    delete:
+      summary: Deleta um funcionário pelo ID
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "60d21b4667d0d8992e610c85"
+      responses:
+        '204':
+          description: Funcionario deletado
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionario não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /funcionario/deleteByCpf/{cpf}:
+    delete:
+      summary: Deleta um funcionário pelo CPF
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '204':
+          description: Funcionario deletado
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionario não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /funcionario/acessorios/mousepad/{cpfFuncionario}:
+    post:
+      summary: Altera o status do mousepad de um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '200':
+          description: Status do mousepad alterado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro ao buscar informações do funcionário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /funcionario/acessorios/suporteNotebook/{cpfFuncionario}:
+    post:
+      summary: Altera o status do suporte para notebook de um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '200':
+          description: Status do suporte para notebook alterado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro ao buscar informações do funcionário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /celular/{cpfFuncionario}:
+    post:
+      summary: Associa um novo celular a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "iPhone 12"
+                numero:
+                  type: string
+                  example: "5551999999999"
+                IMEI1:
+                  type: string
+                  example: "356939099919189"
+                observacao:
+                  type: string
+                  example: "Celular de uso pessoal"
+      responses:
+        '201':
+          description: Celular criado e associado ao funcionário com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Celular'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário não encontrado ou campos obrigatórios não preenchidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Remove a associação de um celular de um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '204':
+          description: Associação de celular removida com sucesso
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou celular não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Atualiza as informações de um celular associado a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "iPhone 13"
+                numero:
+                  type: string
+                  example: "5551988888888"
+                IMEI1:
+                  type: string
+                  example: "356939099919190"
+                observacao:
+                  type: string
+                  example: "Celular de uso profissional"
+      responses:
+        '200':
+          description: Informações do celular atualizadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Celular'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou celular não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /desktop/{cpfFuncionario}:    # Nova rota para desktop
+    post:
+      summary: Associa um novo desktop a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag:
+                  type: string
+                  example: "Dell"
+                modelo:
+                  type: string
+                  example: "OptiPlex 5050"
+                numeroSerie:
+                  type: string
+                  example: "ABC123"
+                versao:
+                  type: string
+                  example: "V1.0"
+                caracteristicas:
+                  type: string
+                  example: "Desktop de alta performance"
+                observacao:
+                  type: string
+                  example: "Desktop para uso profissional"
+      responses:
+        '201':
+          description: Desktop criado e associado ao funcionário com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desktop'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário não encontrado ou campos obrigatórios não preenchidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Remove a associação de um desktop de um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '204':
+          description: Associação de desktop removida com sucesso
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou desktop não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Atualiza as informações de um desktop associado a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag:
+                  type: string
+                  example: "Dell"
+                modelo:
+                  type: string
+                  example: "OptiPlex 5070"
+                numeroSerie:
+                  type: string
+                  example: "XYZ789"
+                versao:
+                  type: string
+                  example: "V2.0"
+                caracteristicas:
+                  type: string
+                  example: "Desktop de alta performance"
+                observacao:
+                  type: string
+                  example: "Desktop para uso profissional"
+      responses:
+        '200':
+          description: Informações do desktop atualizadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desktop'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou desktop não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /headset/{cpfFuncionario}:    # Rota para headsets
+    post:
+      summary: Associa um novo headset a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "Sony WH-1000XM4"
+                numeroSerie:
+                  type: string
+                  example: "ABC123"
+                observacao:
+                  type: string
+                  example: "Headset para uso profissional"
+      responses:
+        '201':
+          description: Headset criado e associado ao funcionário com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Headset'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário não encontrado ou campos obrigatórios não preenchidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Remove a associação de um headset de um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '204':
+          description: Associação de headset removida com sucesso
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou headset não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Atualiza as informações de um headset associado a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "Sony WH-1000XM3"
+                numeroSerie:
+                  type: string
+                  example: "XYZ789"
+                observacao:
+                  type: string
+                  example: "Headset para uso profissional"
+      responses:
+        '200':
+          description: Informações do headset atualizadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Headset'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou headset não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /mouse/{cpfFuncionario}:    # Rota para mouses
+    post:
+      summary: Associa um novo mouse a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "Logitech G502"
+                numeroSerie:
+                  type: string
+                  example: "XYZ123"
+                observacao:
+                  type: string
+                  example: "Mouse para uso profissional"
+      responses:
+        '201':
+          description: Mouse criado e associado ao funcionário com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mouse'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário não encontrado ou campos obrigatórios não preenchidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Remove a associação de um mouse de um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '204':
+          description: Associação de mouse removida com sucesso
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou mouse não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Atualiza as informações de um mouse associado a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "Logitech G502 Hero"
+                numeroSerie:
+                  type: string
+                  example: "ABC456"
+                observacao:
+                  type: string
+                  example: "Mouse para uso profissional"
+      responses:
+        '200':
+          description: Informações do mouse atualizadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mouse'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou mouse não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /nobreak/{cpfFuncionario}:    # Rota para nobreaks
+    post:
+      summary: Associa um novo nobreak a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Nobreak'
+      responses:
+        '201':
+          description: Nobreak criado e associado ao funcionário com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nobreak'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário não encontrado ou campos obrigatórios não preenchidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Remove a associação de um nobreak de um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '204':
+          description: Associação de nobreak removida com sucesso
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou nobreak não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Atualiza as informações de um nobreak associado a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Nobreak'
+      responses:
+        '200':
+          description: Informações do nobreak atualizadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nobreak'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou nobreak não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /notebook/{cpfFuncionario}:    # Rota para notebooks
+    post:
+      summary: Associa um novo notebook a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notebook'
+      responses:
+        '201':
+          description: Notebook criado e associado ao funcionário com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notebook'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário não encontrado ou campos obrigatórios não preenchidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Remove a associação de um notebook de um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '204':
+          description: Associação de notebook removida com sucesso
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou notebook não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Atualiza as informações de um notebook associado a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notebook'
+      responses:
+        '200':
+          description: Informações do notebook atualizadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notebook'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou notebook não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /teclado/{cpfFuncionario}:    # Rota para teclados
+    post:
+      summary: Associa um novo teclado a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teclado'
+      responses:
+        '201':
+          description: Teclado criado e associado ao funcionário com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teclado'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário não encontrado ou campos obrigatórios não preenchidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Remove a associação de um teclado de um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '204':
+          description: Associação de teclado removida com sucesso
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou teclado não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Atualiza as informações de um teclado associado a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teclado'
+      responses:
+        '200':
+          description: Informações do teclado atualizadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teclado'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou teclado não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Funcionario:
+      type: object
+      properties:
+        nome:
+          type: string
+        cpf:
+          type: string
+        possuiNotebook:
+          type: boolean
+        possuiMonitor1:
+          type: boolean
+        possuiMonitor2:
+          type: boolean
+        possuiTeclado:
+          type: boolean
+        possuiMouse:
+          type: boolean
+        possuiDesktop:
+          type: boolean
+        suporteNotebook:
+          type: boolean
+        mousePad:
+          type: boolean
+        possuiNobreak:
+          type: boolean
+        possuiHeadset:
+          type: boolean
+        possuiCelular:
+          type: boolean
+    Celular:
+      type: object
+      properties:
+        modelo:
+          type: string
+        numero:
+          type: string
+        IMEI1:
+          type: string
+        observacao:
+          type: string
+    Desktop:    # Nova definição de esquema para Desktop
+      type: object
+      properties:
+        tag:
+          type: string
+        modelo:
+          type: string
+        numeroSerie:
+          type: string
+        versao:
+          type: string
+        caracteristicas:
+          type: string
+        observacao:
+          type: string
+    Headset:    # Esquema para Headset
+      type: object
+      properties:
+        modelo:
+          type: string
+        numeroSerie:
+          type: string
+        observacao:
+          type: string
+    Mouse:    # Esquema para Mouse
+      type: object
+      properties:
+        modelo:
+          type: string
+        numeroSerie:
+          type: string
+        observacao:
+          type: string
+    Nobreak:    # Esquema para Nobreak
+      type: object
+      properties:
+        modelo:
+          type: string
+        numeroSerie:
+          type: string
+        observacao:
+          type: string
+    Notebook:    # Esquema para Notebook
+      type: object
+      properties:
+        tag:
+          type: string
+        modelo:
+          type: string
+        numeroSerie:
+          type: string
+        versao:
+          type: string
+        caracteristicas:
+          type: string
+        observacao:
+          type: string
+    Teclado:    # Esquema para Teclado
+      type: object
+      properties:
+        modelo:
+          type: string
+        numeroSerie:
+          type: string
+        observacao:
+          type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string

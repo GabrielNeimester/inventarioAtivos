@@ -23,6 +23,18 @@ export default class FuncionarioController {
     const funcionario = new Funcionario()
     funcionario.nome = nome
     funcionario.cpf = cpf
+    funcionario.possuiNotebook = false
+    funcionario.possuiMonitor1 = false
+    funcionario.possuiMonitor2 = false
+    funcionario.possuiTeclado = false
+    funcionario.possuiMouse = false
+    funcionario.possuiDesktop = false
+    funcionario.suporteNotebook = false
+    funcionario.mousePad = false
+    funcionario.possuiNobreak = false
+    funcionario.possuiHeadset = false
+    funcionario.possuiCelular = false
+
     await funcionario.save()
 
     return res.status(201).json(funcionario)
@@ -104,5 +116,37 @@ export default class FuncionarioController {
 
     return res.json(funcionario)
   }
+
+  static async changeMousePad(req: Request, res: Response){
+    const { cpfFuncionario } = req.params
+
+    const funcionario = await Funcionario.findOne({ cpf: cpfFuncionario }).exec();
+        if (!funcionario) {
+            return res.status(400).json({ error: 'Não existe um funcionário com este CPF' });
+        }
+
+        if(!funcionario.mousePad){
+          return res.status(500).json({ error: 'Erro ao buscar informacoes do funcionario' });
+        }
+
+        funcionario.mousePad = !funcionario.mousePad
+  }
+
+  static async changeSuportNotebook(req: Request, res: Response){
+    const { cpfFuncionario } = req.params
+
+    const funcionario = await Funcionario.findOne({ cpf: cpfFuncionario }).exec();
+        if (!funcionario) {
+            return res.status(400).json({ error: 'Não existe um funcionário com este CPF' });
+        }
+
+        if(!funcionario.suporteNotebook){
+          return res.status(500).json({ error: 'Erro ao buscar informacoes do funcionario' });
+        }
+
+        funcionario.suporteNotebook = !funcionario.suporteNotebook
+  }
+  
+
 }
 

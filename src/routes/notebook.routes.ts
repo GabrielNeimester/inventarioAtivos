@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import NotebookController from '../controller/notebook'
+import NotebookController from '../controller/notebook.controller'
 
 
 const notebookRoutes = Router()

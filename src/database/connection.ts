@@ -5,7 +5,7 @@ const password = process.env.PASSWORD
 
 
 const connect = () => {
-    mongoose.connect(`mongodb+srv://${user}:${password}@inventarioativos.bso4r9w.mongodb.net/?retryWrites=true&w=majority&appName=InventarioAtivos`)
+    mongoose.connect(`mongodb://localhost:27017/inventarioAtivos`)
 
     const connection = mongoose.connection
 

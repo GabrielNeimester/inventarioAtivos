@@ -1,10 +1,12 @@
 import { Router } from 'express'
-import FuncionarioController from "../controller/funcionario"
+import FuncionarioController from "../controller/funcionario.controller"
 
 
 const funcionarioRoutes = Router()
 
 funcionarioRoutes.post("/", FuncionarioController.store )
+funcionarioRoutes.post("/acessorios/mousepad/:cpfFuncionario", FuncionarioController.changeMousePad)
+funcionarioRoutes.post("/acessorios/suporteNotebook/:cpfFuncionario", FuncionarioController.changeSuportNotebook)
 funcionarioRoutes.get("/", FuncionarioController.index )
 funcionarioRoutes.get("/:cpf", FuncionarioController.showByCpf)
 funcionarioRoutes.delete("/deleteById/:_id", FuncionarioController.deleteById)
