@@ -2,13 +2,15 @@ openapi: 3.0.0
 info:
   title: Funcionario API
   version: 1.0.0
-  description: API para gerenciamento de funcionários
+  description: API para Inventário de ativos de TI
 servers:
   - url: http://localhost:3000
 paths:
   /funcionario:
     post:
-      summary: Cria um novo funcionário
+      tags:
+        - Funcionários
+      summary: Inserir um novo funcionário
       requestBody:
         required: true
         content:
@@ -35,11 +37,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     get:
+      tags:
+        - Funcionários
       summary: Lista todos os funcionários
       responses:
         '200':
-          description: Lista de funcionários
+          description: Listar todos os funcionários
           content:
             application/json:
               schema:
@@ -48,7 +58,9 @@ paths:
                   $ref: '#/components/schemas/Funcionario'
   /funcionario/{cpf}:
     get:
-      summary: Retorna um funcionário pelo CPF
+      tags:
+        - Funcionários
+      summary: Consultar o inventário completo de um determinado funcionário por CPF
       parameters:
         - name: cpf
           in: path
@@ -75,8 +87,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     put:
-      summary: Atualiza um funcionário pelo CPF
+      tags:
+        - Funcionários
+      summary: Atualizar o nome do funcionário tendo como referência do documento o próprio CPF
       parameters:
         - name: cpf
           in: path
@@ -113,9 +133,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /funcionario/deleteById/{_id}:
     delete:
-      summary: Deleta um funcionário pelo ID
+      tags:
+        - Funcionários
+      summary: Exclui um funcionário pelo ID
       parameters:
         - name: _id
           in: path
@@ -140,7 +168,9 @@ paths:
                 $ref: '#/components/schemas/Error'
   /funcionario/deleteByCpf/{cpf}:
     delete:
-      summary: Deleta um funcionário pelo CPF
+      tags:
+        - Funcionários
+      summary: Exclui um funcionário pelo CPF
       parameters:
         - name: cpf
           in: path
@@ -165,7 +195,9 @@ paths:
                 $ref: '#/components/schemas/Error'
   /funcionario/acessorios/mousepad/{cpfFuncionario}:
     post:
-      summary: Altera o status do mousepad de um funcionário
+      tags:
+        - Acessórios
+      summary: Muda o estado do acessórios mousepad de um funcionário
       parameters:
         - name: cpfFuncionario
           in: path
@@ -179,7 +211,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Funcionario'
+                type: object
+                properties:
+                  mousepad:
+                    type: boolean
+                    example: false
         '400':
           description: Requisição inválida
           content:
@@ -194,7 +230,9 @@ paths:
                 $ref: '#/components/schemas/Error'
   /funcionario/acessorios/suporteNotebook/{cpfFuncionario}:
     post:
-      summary: Altera o status do suporte para notebook de um funcionário
+      tags:
+        - Acessórios
+      summary: Muda o estado do acessório de suporte de notebook de um funcionário
       parameters:
         - name: cpfFuncionario
           in: path
@@ -208,7 +246,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Funcionario'
+                type: object
+                properties:
+                  suporteNotebook:
+                    type: boolean
+                    example: false
         '400':
           description: Requisição inválida
           content:
@@ -223,6 +265,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /celular/{cpfFuncionario}:
     post:
+      tags:
+        - Celular
       summary: Associa um novo celular a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -240,16 +284,16 @@ paths:
               properties:
                 modelo:
                   type: string
-                  example: "iPhone 12"
+                  example: "Samsung Galaxy A03"
                 numero:
                   type: string
-                  example: "5551999999999"
+                  example: "19982249772"
                 IMEI1:
                   type: string
-                  example: "356939099919189"
+                  example: "19823712895"
                 observacao:
                   type: string
-                  example: "Celular de uso pessoal"
+                  example: ""
       responses:
         '201':
           description: Celular criado e associado ao funcionário com sucesso
@@ -269,7 +313,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
+      tags:
+        - Celular
       summary: Remove a associação de um celular de um funcionário
       parameters:
         - name: cpfFuncionario
@@ -294,6 +346,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
+      tags:
+        - Celular
       summary: Atualiza as informações de um celular associado a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -311,16 +365,16 @@ paths:
               properties:
                 modelo:
                   type: string
-                  example: "iPhone 13"
+                  example: "Samsung Galaxy A03"
                 numero:
                   type: string
-                  example: "5551988888888"
+                  example: "19982249772"
                 IMEI1:
                   type: string
-                  example: "356939099919190"
+                  example: "19823712895"
                 observacao:
                   type: string
-                  example: "Celular de uso profissional"
+                  example: ""
       responses:
         '200':
           description: Informações do celular atualizadas com sucesso
@@ -340,8 +394,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /desktop/{cpfFuncionario}:    # Nova rota para desktop
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /desktop/{cpfFuncionario}:
     post:
+      tags:
+        - Desktop
       summary: Associa um novo desktop a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -359,22 +421,22 @@ paths:
               properties:
                 tag:
                   type: string
-                  example: "Dell"
+                  example: "XYZ1234"
                 modelo:
                   type: string
-                  example: "OptiPlex 5050"
+                  example: "T14"
                 numeroSerie:
                   type: string
-                  example: "ABC123"
+                  example: "76178231T812"
                 versao:
                   type: string
-                  example: "V1.0"
+                  example: "WINDOWS 11 PRO"
                 caracteristicas:
                   type: string
-                  example: "Desktop de alta performance"
+                  example: "SS 240GB INTEL"
                 observacao:
                   type: string
-                  example: "Desktop para uso profissional"
+                  example: "Desktop para uso no trabalho"
       responses:
         '201':
           description: Desktop criado e associado ao funcionário com sucesso
@@ -394,7 +456,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
+      tags:
+        - Desktop
       summary: Remove a associação de um desktop de um funcionário
       parameters:
         - name: cpfFuncionario
@@ -419,6 +489,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
+      tags:
+        - Desktop
       summary: Atualiza as informações de um desktop associado a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -436,22 +508,22 @@ paths:
               properties:
                 tag:
                   type: string
-                  example: "Dell"
+                  example: "XYZ1234"
                 modelo:
                   type: string
-                  example: "OptiPlex 5070"
+                  example: "T14"
                 numeroSerie:
                   type: string
-                  example: "XYZ789"
+                  example: "76178231T812"
                 versao:
                   type: string
-                  example: "V2.0"
+                  example: "WINDOWS 11 PRO"
                 caracteristicas:
                   type: string
-                  example: "Desktop de alta performance"
+                  example: "SS 240GB INTEL"
                 observacao:
                   type: string
-                  example: "Desktop para uso profissional"
+                  example: "Desktop para uso no trabalho"
       responses:
         '200':
           description: Informações do desktop atualizadas com sucesso
@@ -471,8 +543,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /headset/{cpfFuncionario}:    # Rota para headsets
     post:
+      tags:
+        - Headset
       summary: Associa um novo headset a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -490,13 +570,13 @@ paths:
               properties:
                 modelo:
                   type: string
-                  example: "Sony WH-1000XM4"
+                  example: "LOGITEC"
                 numeroSerie:
                   type: string
-                  example: "ABC123"
+                  example: "1822325"
                 observacao:
                   type: string
-                  example: "Headset para uso profissional"
+                  example: ""
       responses:
         '201':
           description: Headset criado e associado ao funcionário com sucesso
@@ -516,7 +596,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
+      tags:
+        - Headset
       summary: Remove a associação de um headset de um funcionário
       parameters:
         - name: cpfFuncionario
@@ -541,6 +629,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
+      tags:
+        - Headset
       summary: Atualiza as informações de um headset associado a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -558,13 +648,13 @@ paths:
               properties:
                 modelo:
                   type: string
-                  example: "Sony WH-1000XM3"
+                  example: "LOGITEC"
                 numeroSerie:
                   type: string
-                  example: "XYZ789"
+                  example: "1822325"
                 observacao:
                   type: string
-                  example: "Headset para uso profissional"
+                  example: ""
       responses:
         '200':
           description: Informações do headset atualizadas com sucesso
@@ -584,8 +674,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /mouse/{cpfFuncionario}:    # Rota para mouses
     post:
+      tags:
+        - Mouse
       summary: Associa um novo mouse a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -603,13 +701,13 @@ paths:
               properties:
                 modelo:
                   type: string
-                  example: "Logitech G502"
+                  example: "LOGITEC"
                 numeroSerie:
                   type: string
-                  example: "XYZ123"
+                  example: "12323234"
                 observacao:
                   type: string
-                  example: "Mouse para uso profissional"
+                  example: ""
       responses:
         '201':
           description: Mouse criado e associado ao funcionário com sucesso
@@ -629,7 +727,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
+      tags:
+        - Mouse
       summary: Remove a associação de um mouse de um funcionário
       parameters:
         - name: cpfFuncionario
@@ -654,6 +760,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
+      tags:
+        - Mouse
       summary: Atualiza as informações de um mouse associado a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -671,13 +779,13 @@ paths:
               properties:
                 modelo:
                   type: string
-                  example: "Logitech G502 Hero"
+                  example: "LOGITEC"
                 numeroSerie:
                   type: string
-                  example: "ABC456"
+                  example: "12323234"
                 observacao:
                   type: string
-                  example: "Mouse para uso profissional"
+                  example: ""
       responses:
         '200':
           description: Informações do mouse atualizadas com sucesso
@@ -697,8 +805,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /nobreak/{cpfFuncionario}:    # Rota para nobreaks
     post:
+      tags:
+        - Nobreak
       summary: Associa um novo nobreak a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -712,7 +828,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Nobreak'
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "--"
+                numeroSerie:
+                  type: string
+                  example: "--"
+                observacao:
+                  type: string
+                  example: "--"
       responses:
         '201':
           description: Nobreak criado e associado ao funcionário com sucesso
@@ -732,7 +858,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
+      tags:
+        - Nobreak
       summary: Remove a associação de um nobreak de um funcionário
       parameters:
         - name: cpfFuncionario
@@ -757,6 +891,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
+      tags:
+        - Nobreak
       summary: Atualiza as informações de um nobreak associado a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -770,7 +906,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Nobreak'
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "--"
+                numeroSerie:
+                  type: string
+                  example: "--"
+                observacao:
+                  type: string
+                  example: "--"
       responses:
         '200':
           description: Informações do nobreak atualizadas com sucesso
@@ -790,8 +936,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /notebook/{cpfFuncionario}:    # Rota para notebooks
     post:
+      tags:
+        - Notebook
       summary: Associa um novo notebook a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -805,7 +959,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Notebook'
+              type: object
+              properties:
+                tag:
+                  type: string
+                  example: "XYZ1234"
+                modelo:
+                  type: string
+                  example: "ACER"
+                numeroSerie:
+                  type: string
+                  example: "76178231T812"
+                versao:
+                  type: string
+                  example: "WINDOWS 11 PRO"
+                caracteristicas:
+                  type: string
+                  example: "Intel i7 16GB RAM 512GB SSD 14"
+                observacao:
+                  type: string
+                  example: "Possui riscos na tela"
       responses:
         '201':
           description: Notebook criado e associado ao funcionário com sucesso
@@ -825,7 +998,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
+      tags:
+        - Notebook      
       summary: Remove a associação de um notebook de um funcionário
       parameters:
         - name: cpfFuncionario
@@ -850,6 +1031,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
+      tags:
+        - Notebook
       summary: Atualiza as informações de um notebook associado a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -863,7 +1046,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Notebook'
+              type: object
+              properties:
+                tag:
+                  type: string
+                  example: "XYZ1234"
+                modelo:
+                  type: string
+                  example: "ACER"
+                numeroSerie:
+                  type: string
+                  example: "76178231T812"
+                versao:
+                  type: string
+                  example: "WINDOWS 11 PRO"
+                caracteristicas:
+                  type: string
+                  example: "Intel i7 16GB RAM 512GB SSD 14"
+                observacao:
+                  type: string
+                  example: "Possui riscos na tela"
       responses:
         '200':
           description: Informações do notebook atualizadas com sucesso
@@ -883,8 +1085,142 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /monitor/{cpfFuncionario}:
+    post:
+      tags:
+        - Monitores
+      summary: Adiciona um novo monitor a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "AOC"
+                numeroSerie:
+                  type: string
+                  example: "1242342343"
+                observacao:
+                  type: string
+                  example: ""
+      responses:
+        '201':
+          description: Monitor criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monitor'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Monitores
+      summary: Deleta todos os monitores associados a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '204':
+          description: Monitores deletados com sucesso
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou monitor não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /monitor/{cpfFuncionario}/{numeroMonitor}:
+    put:
+      tags:
+        - Monitores
+      summary: Atualiza um monitor associado a um funcionário
+      parameters:
+        - name: cpfFuncionario
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678901"
+        - name: numeroMonitor
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "AOC"
+                numeroSerie:
+                  type: string
+                  example: "1242342343"
+                observacao:
+                  type: string
+                  example: ""
+      responses:
+        '200':
+          description: Monitor atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monitor'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Funcionário ou monitor não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /teclado/{cpfFuncionario}:    # Rota para teclados
     post:
+      tags:
+        - Teclado
       summary: Associa um novo teclado a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -898,7 +1234,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Teclado'
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "LOGITEC"
+                numeroSerie:
+                  type: string
+                  example: "41232132"
+                observacao:
+                  type: string
+                  example: ""
       responses:
         '201':
           description: Teclado criado e associado ao funcionário com sucesso
@@ -918,7 +1264,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
+      tags:
+        - Teclado
       summary: Remove a associação de um teclado de um funcionário
       parameters:
         - name: cpfFuncionario
@@ -943,6 +1297,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
+      tags:
+        - Teclado
       summary: Atualiza as informações de um teclado associado a um funcionário
       parameters:
         - name: cpfFuncionario
@@ -956,7 +1312,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Teclado'
+              type: object
+              properties:
+                modelo:
+                  type: string
+                  example: "LOGITEC"
+                numeroSerie:
+                  type: string
+                  example: "41232132"
+                observacao:
+                  type: string
+                  example: ""
       responses:
         '200':
           description: Informações do teclado atualizadas com sucesso
@@ -972,6 +1338,12 @@ paths:
                 $ref: '#/components/schemas/Error'
         '404':
           description: Funcionário ou teclado não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Erro do servidor
           content:
             application/json:
               schema:
@@ -1084,6 +1456,18 @@ components:
           type: string
         observacao:
           type: string
+    Monitor:
+      type: object
+      properties:
+        modelo:
+          type: string
+          example: "Dell P2419H"
+        numeroSerie:
+          type: string
+          example: "SN123456789"
+        observacao:
+          type: string
+          example: "Monitor principal"
     Error:
       type: object
       properties:

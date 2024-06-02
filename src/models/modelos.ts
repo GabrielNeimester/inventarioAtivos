@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const notebookSchema = new mongoose.Schema({
     tag: { type: String, required: true, maxlength: 7 },
-    modelo: { type: String, required: true, maxlength: 10 },
+    modelo: { type: String, required: true, maxlength: 100 },
     numeroSerie: { type: String, required: true, maxlength: 12 },
     versao: { type: String, required: true, maxlength: 100 },
     caracteristicas: { type: String, required: true, maxlength: 100 },
@@ -10,26 +10,26 @@ const notebookSchema = new mongoose.Schema({
 })
 
 const monitorSchema = new mongoose.Schema({
-    modelo: { type: String, required: true, maxlength: 10 },
+    modelo: { type: String, required: true, maxlength: 100 },
     numeroSerie: { type: String, required: true, maxlength: 12 },
     observacao: { type: String, maxlength: 250 }
 })
 
 const tecladoSchema = new mongoose.Schema({
-    modelo: { type: String, required: true, maxlength: 10 },
+    modelo: { type: String, required: true, maxlength: 100 },
     numeroSerie: { type: String, required: true, maxlength: 12 },
     observacao: { type: String, maxlength: 250 }
 })
 
 const mouseSchema = new mongoose.Schema({
-    modelo: { type: String, required: true, maxlength: 10 },
+    modelo: { type: String, required: true, maxlength: 100 },
     numeroSerie: { type: String, required: true, maxlength: 12 },
     observacao: { type: String, maxlength: 250 }
 })
 
 const desktopSchema = new mongoose.Schema({
     tag: { type: String, required: true, maxlength: 7 },
-    modelo: { type: String, required: true, maxlength: 10 },
+    modelo: { type: String, required: true, maxlength: 100 },
     numeroSerie: { type: String, required: true, maxlength: 12 },
     versao: { type: String, required: true, maxlength: 100 },
     caracteristicas: { type: String, required: true, maxlength: 100 },
@@ -38,22 +38,22 @@ const desktopSchema = new mongoose.Schema({
 
 
 const nobreakSchema = new mongoose.Schema({
-    modelo: { type: String, required: true, maxlength: 10 },
+    modelo: { type: String, required: true, maxlength: 100 },
     numeroSerie: { type: String, required: true, maxlength: 12 },
     observacao: { type: String, required: true, maxlength: 250 }
 })
 
 const headsetSchema = new mongoose.Schema({
-    modelo: { type: String, required: true, maxlength: 10 },
+    modelo: { type: String, required: true, maxlength: 100 },
     numeroSerie: { type: String, required: true, maxlength: 12 },
-    observacao: { type: String, required: true, maxlength: 250 }
+    observacao: { type: String, maxlength: 250 }
 })
 
 const celularSchema = new mongoose.Schema({
-    modelo: { type: String, required: true, maxlength: 10 },
+    modelo: { type: String, required: true, maxlength: 100 },
     IMEI1: { type: String, required: true, maxlength: 11 },
     numero: { type: String, required: true, maxlength: 11 },
-    observacao: { type: String, required: true, maxlength: 250 }
+    observacao: { type: String, maxlength: 250 }
 })
 
 // Definindo o esquema do funcionário
@@ -82,12 +82,12 @@ const funcionarioSchema = new mongoose.Schema({
     celular: { type: mongoose.Schema.Types.ObjectId, ref: 'Celular' },
 })
 
-export const Notebook = mongoose.model('Notebook', notebookSchema, 'notebooks');
-export const Funcionario = mongoose.model('Funcionario', funcionarioSchema, 'funcionarios');
-export const Monitor = mongoose.model('Monitor', monitorSchema, 'monitores');
-export const Teclado = mongoose.model('Teclado', tecladoSchema, 'teclados');
-export const Mouse = mongoose.model('Mouse', mouseSchema, 'mouses');
-export const Desktop = mongoose.model('Desktop', desktopSchema, 'desktops');
-export const Nobreak = mongoose.model('Nobreak', nobreakSchema, 'nobreaks');
-export const Headset = mongoose.model('Headset', headsetSchema, 'headsets');
-export const Celular = mongoose.model('Celular', celularSchema, 'celulares');
+export const Notebook = mongoose.model('Notebook', notebookSchema, 'notebooks')
+export const Funcionario = mongoose.model('Funcionario', funcionarioSchema, 'funcionarios')
+export const Monitor = mongoose.model('Monitor', monitorSchema, 'monitores')
+export const Teclado = mongoose.model('Teclado', tecladoSchema, 'teclados')
+export const Mouse = mongoose.model('Mouse', mouseSchema, 'mouses')
+export const Desktop = mongoose.model('Desktop', desktopSchema, 'desktops')
+export const Nobreak = mongoose.model('Nobreak', nobreakSchema, 'nobreaks')
+export const Headset = mongoose.model('Headset', headsetSchema, 'headsets')
+export const Celular = mongoose.model('Celular', celularSchema, 'celulares')

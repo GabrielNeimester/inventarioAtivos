@@ -1,6 +1,6 @@
 import { Teclado, Funcionario } from '../models/modelos'
 import { Request, Response } from 'express'
-import mongoose from "mongoose"
+
 
 export default class TecladoController {
 
@@ -14,23 +14,30 @@ export default class TecladoController {
         }
 
         if (funcionario.teclado) {
-            return res.status(400).json({ error: 'O funcionário já possui um monitor principal associado' });
+            return res.status(400).json({ error: 'O funcionário já possui um teclado associado' });
         }
 
         if (!modelo || !numeroSerie) {
             return res.status(404).json({ error: 'Campos obrigatórios não preenchidos' })
         }
 
-        const teclado = new Teclado()
-        teclado.modelo = modelo
-        teclado.numeroSerie = numeroSerie
-        teclado.observacao = observacao
-        await teclado.save()
-
-        funcionario.teclado = teclado._id
-        await funcionario.save()
-
-        return res.status(201).json(teclado)
+        try{
+          const teclado = new Teclado()
+          teclado.modelo = modelo
+          teclado.numeroSerie = numeroSerie
+          teclado.observacao = observacao
+          await teclado.save()
+  
+          funcionario.teclado = teclado._id
+          funcionario.possuiTeclado = true
+          await funcionario.save()
+  
+          return res.status(201).json(teclado)
+        }
+        catch (error: any) {
+          return res.status(500).json(`Ocorreu um erro inesperado ${error}`)
+        }
+        
     }
 
     static async update(req: Request, res: Response) {
@@ -43,21 +50,23 @@ export default class TecladoController {
         }
     
         if (!funcionario.teclado) {
-            return res.status(400).json({ error: 'O funcionário não possui um monitor principal associado' });
+            return res.status(400).json({ error: 'O funcionário não possui um teclado associado' });
         }
 
         const teclado= await Teclado.findById(funcionario.teclado).exec();
         if (!teclado) {
-          return res.status(404).json({ error: 'Monitor associado ao funcionário não encontrado' });
+          return res.status(404).json({ error: 'Teclado associado ao funcionário não encontrado' });
         }
+
         try{
             teclado.modelo = modelo
             teclado.numeroSerie = numeroSerie
             teclado.observacao = observacao
             await teclado.save()
+            return res.status(201).json(teclado)
         }
         catch (error) {
-            return res.status(404).json({ error: `Erro do Servidor: ${error}` });
+            return res.status(500).json({ error: `Erro do Servidor: ${error}` });
         }
        
       }
@@ -71,14 +80,12 @@ export default class TecladoController {
         }
     
         if (!funcionario.teclado || funcionario.possuiTeclado === false) {
-            return res.status(400).json({ error: 'O funcionário não possui um monitor principal associado' });
-        }
-
-
+          return res.status(400).json({ error: 'O funcionário não possui um teclado associado' })
+      }
 
         const teclado = await Teclado.findById(funcionario.teclado).exec();
         if (!teclado) {
-          return res.status(404).json({ error: 'monitor principal associado ao funcionário não encontrado' });
+          return res.status(404).json({ error: 'teclado associado ao funcionário não encontrado' });
         }
     
 

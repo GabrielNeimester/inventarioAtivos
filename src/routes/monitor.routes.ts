@@ -6,7 +6,7 @@ const monitorRoutes = Router()
 
 monitorRoutes.post("/:cpfFuncionario", MonitorController.store )
 monitorRoutes.delete("/:cpfFuncionario", MonitorController.delete )
-monitorRoutes.put("/:cpfFuncionario", MonitorController.update)
+monitorRoutes.put("/:cpfFuncionario/:numeroMonitor", MonitorController.update)
 
 
 export default monitorRoutes

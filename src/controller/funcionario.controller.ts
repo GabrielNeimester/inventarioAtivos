@@ -1,4 +1,4 @@
-import {Funcionario} from '../models/modelos'
+import { Funcionario } from '../models/modelos'
 import { Request, Response } from 'express'
 import mongoose from "mongoose"
 
@@ -11,7 +11,7 @@ export default class FuncionarioController {
       return res.status(400).json({ error: 'Todos os campos são obrigatórios!!' })
     }
 
-    if (cpf.length<11 || cpf.length>11) {
+    if (cpf.length < 11 || cpf.length > 11) {
       return res.status(400).json({ error: 'Digite um CPF válido' })
     }
 
@@ -20,24 +20,31 @@ export default class FuncionarioController {
       return res.status(400).json({ error: 'Já existe um funcionário com este CPF' });
     }
 
-    const funcionario = new Funcionario()
-    funcionario.nome = nome
-    funcionario.cpf = cpf
-    funcionario.possuiNotebook = false
-    funcionario.possuiMonitor1 = false
-    funcionario.possuiMonitor2 = false
-    funcionario.possuiTeclado = false
-    funcionario.possuiMouse = false
-    funcionario.possuiDesktop = false
-    funcionario.suporteNotebook = false
-    funcionario.mousePad = false
-    funcionario.possuiNobreak = false
-    funcionario.possuiHeadset = false
-    funcionario.possuiCelular = false
+    try {
+      const funcionario = new Funcionario()
+      funcionario.nome = nome
+      funcionario.cpf = cpf
+      funcionario.possuiNotebook = false
+      funcionario.possuiMonitor1 = false
+      funcionario.possuiMonitor2 = false
+      funcionario.possuiTeclado = false
+      funcionario.possuiMouse = false
+      funcionario.possuiDesktop = false
+      funcionario.suporteNotebook = false
+      funcionario.mousePad = false
+      funcionario.possuiNobreak = false
+      funcionario.possuiHeadset = false
+      funcionario.possuiCelular = false
 
-    await funcionario.save()
+      await funcionario.save()
 
-    return res.status(201).json(funcionario)
+      return res.status(201).json(funcionario)
+    }
+
+
+    catch (error: any) {
+      return res.status(500).json(`Ocorreu um erro inesperado ${error}`)
+    }
   }
 
   static async index(req: Request, res: Response) {
@@ -48,11 +55,11 @@ export default class FuncionarioController {
   static async showByCpf(req: Request, res: Response) {
     const { cpf } = req.params
 
-    if (!cpf || cpf.length<11 || cpf.length>11) {
+    if (!cpf || cpf.length < 11 || cpf.length > 11) {
       return res.status(400).json({ error: 'Digite um CPF válido' })
     }
 
-    const funcionario = await Funcionario.findOne({ cpf: cpf }).populate('notebook').exec()
+    const funcionario = await Funcionario.findOne({ cpf: cpf }).populate('notebook').populate('teclado').populate('mouse').populate('nobreak').populate('headset').populate('desktop').populate('celular').populate('monitor1').populate('monitor2').exec()
     return res.json(funcionario)
   }
 
@@ -70,6 +77,9 @@ export default class FuncionarioController {
       return res.status(404).json({ error: 'Funcionário não encontrado' })
     }
 
+    if (funcionario.possuiNotebook === true || funcionario.possuiMonitor1 === true || funcionario.possuiMonitor2 === true || funcionario.possuiTeclado === true || funcionario.possuiMouse === true || funcionario.possuiDesktop === true || funcionario.suporteNotebook === true || funcionario.mousePad === true || funcionario.possuiHeadset === true || funcionario.possuiCelular === true) {
+      return res.status(400).json({ error: 'Não foi possível excluir o funcionário, pois o mesmo possui ativos associados' })
+    }
 
     await funcionario.deleteOne({ _id: _id });
     return res.status(204).json()
@@ -85,6 +95,9 @@ export default class FuncionarioController {
     const funcionario = await Funcionario.findOne({ cpf: cpf }).exec()
     if (!funcionario) {
       return res.status(404).json({ error: 'Funcionário não encontrado' })
+    }
+    if (funcionario.possuiNotebook === true || funcionario.possuiMonitor1 === true || funcionario.possuiMonitor2 === true || funcionario.possuiTeclado === true || funcionario.possuiMouse === true || funcionario.possuiDesktop === true || funcionario.suporteNotebook === true || funcionario.mousePad === true || funcionario.possuiHeadset === true || funcionario.possuiCelular === true) {
+      return res.status(400).json({ error: 'Não foi possível excluir o funcionário, pois o mesmo possui ativos associados' })
     }
 
 
@@ -110,43 +123,45 @@ export default class FuncionarioController {
       return res.status(404).json({ error: 'Funcionário não encontrado' })
     }
 
-    funcionario.nome = nome
 
+    try {
+      funcionario.nome = nome
+
+      await funcionario.save()
+
+      return res.json(funcionario)
+    }
+    catch (error: any) {
+      return res.status(500).json(`Ocorreu um erro inesperado ${error}`)
+    }
+  }
+
+  static async changeMousePad(req: Request, res: Response) {
+    const { cpfFuncionario } = req.params
+
+    const funcionario = await Funcionario.findOne({ cpf: cpfFuncionario }).exec();
+    if (!funcionario) {
+      return res.status(400).json({ error: 'Não existe um funcionário com este CPF' });
+    }
+
+    funcionario.mousePad = !funcionario.mousePad
     await funcionario.save()
-
-    return res.json(funcionario)
+    return res.status(200).json(funcionario.mousePad)
   }
 
-  static async changeMousePad(req: Request, res: Response){
+  static async changeSuportNotebook(req: Request, res: Response) {
     const { cpfFuncionario } = req.params
 
     const funcionario = await Funcionario.findOne({ cpf: cpfFuncionario }).exec();
-        if (!funcionario) {
-            return res.status(400).json({ error: 'Não existe um funcionário com este CPF' });
-        }
+    if (!funcionario) {
+      return res.status(400).json({ error: 'Não existe um funcionário com este CPF' });
+    }
 
-        if(!funcionario.mousePad){
-          return res.status(500).json({ error: 'Erro ao buscar informacoes do funcionario' });
-        }
-
-        funcionario.mousePad = !funcionario.mousePad
+    funcionario.suporteNotebook = !funcionario.suporteNotebook
+    await funcionario.save()
+    return res.status(200).json(funcionario.suporteNotebook)
   }
 
-  static async changeSuportNotebook(req: Request, res: Response){
-    const { cpfFuncionario } = req.params
-
-    const funcionario = await Funcionario.findOne({ cpf: cpfFuncionario }).exec();
-        if (!funcionario) {
-            return res.status(400).json({ error: 'Não existe um funcionário com este CPF' });
-        }
-
-        if(!funcionario.suporteNotebook){
-          return res.status(500).json({ error: 'Erro ao buscar informacoes do funcionario' });
-        }
-
-        funcionario.suporteNotebook = !funcionario.suporteNotebook
-  }
-  
 
 }
 
